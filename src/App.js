@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import scriptLoader from 'react-async-script-loader';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Main from './views/Home/main';
+
+class App extends Component { 
+
+  componentWillReceiveProps ({ isScriptLoaded, isScriptLoadSucceed }) {
+    if (isScriptLoaded && !this.props.isScriptLoaded) { // load finished
+      if (isScriptLoadSucceed) {
+        // alert(isScriptLoadSucceed);
+      }
+      else this.props.onError()
+    }
+  }
+
+  componentDidMount () {
+
+    
+    const { isScriptLoaded, isScriptLoadSucceed } = this.props
+    if (isScriptLoaded && isScriptLoadSucceed) {
+      alert('did mount');
+    }
+  }
+
+  render() {
+
+
+    return(
+      <div className="App">           
+          <Main/>        
+      </div>    
+    )
+  }
 }
 
-export default App;
+export default scriptLoader(
+  '/assets/js/jquery/jquery.min.js',
+  '/assets/js/bootstrap/js/bootstrap.bundle.min.js',
+  '/assets/js/jquery-easing/jquery.easing.min.js',
+)(App);
